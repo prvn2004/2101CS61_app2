@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">SplitIITP</string>
+    <string name="split">SPLIT</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="the_expense_sharing_app">The Expense sharing app.</string>
+    <string name="client_id">560304840393-le9p4hv7gknm7lmj2l558nj9lqs4jcb6.apps.googleusercontent.com</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="_0_00">₹ 0.00</string>
+    <string name="_0_open_groups">0 OPEN GROUPS</string>
+    <string name="todo">TODO</string>
+    <string name="rent">RENT</string>
+    <string name="a_moment_ago">A moment ago</string>
+    <string name="adam">Adam</string>
+    <string name="_40_00">₹ 40.00</string>
+    <string name="praveen_s_tab">Praveen\'s Group</string>
+    <string name="your_share">Your Share</string>
+    <string name="total_bill">Total Bill</string>
+    <string name="mehul_sirvi">Mehul Sirvi</string>
+    <string name="sony_beauty_parlor">Sony beauty parlor</string>
+</resources>
