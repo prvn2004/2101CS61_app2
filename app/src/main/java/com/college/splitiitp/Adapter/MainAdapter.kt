@@ -61,7 +61,7 @@ class MainAdapter(
 
         val email = PreferenceManager.getDefaultSharedPreferences(holder.itemView.context).getString("Email", "");
         val TotalShare = Link.getShares()
-        val myshare=TotalShare.get(email).toString()
+        val myshare= TotalShare!!.get(email).toString()
 
         binding.myShare.text = "₹$myshare"
 

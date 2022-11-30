@@ -18,4 +18,13 @@
     <string name="total_bill">Total Bill</string>
     <string name="mehul_sirvi">Mehul Sirvi</string>
     <string name="sony_beauty_parlor">Sony beauty parlor</string>
+    <string name="adding_group">Adding Group</string>
+    <string name="paid_by">Paid by</string>
+    <string name="submit">Submit</string>
+    <string name="ruppee">₹</string>
+    <string name="paid_by_you">Paid by you</string>
+    <string name="done">DONE</string>
+    <string name="amount">  Amount</string>
+    <string name="what_was_this_spend_for"> What was this spend for?</string>
+    <string name="praveen_kumar">Praveen kumar</string>
 </resources>

@@ -24,6 +24,7 @@ import com.college.splitiitp.databinding.FragmentGroupBinding
 import com.college.splitiitp.fragments.MainFragment.Companion.isConnectionAvailable
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -54,6 +55,8 @@ class GroupFragment : Fragment() {
         if (GroupFragment.isConnectionAvailable(requireActivity())) {
             getGrpName()
             getExpenses()
+            getmyshare()
+            changeFragment()
         } else {
             setupAnim()
         }
@@ -74,7 +77,7 @@ class GroupFragment : Fragment() {
 
         val firestore = FirebaseFirestore.getInstance()
         val collectionReference =
-            firestore.collection("Groups").document(docid.toString()).collection("Expenses")
+            firestore.collection("Groups").document(docid.toString()).collection("Expenses").orderBy("timestamp", Query.Direction.DESCENDING)
 
         collectionReference.addSnapshotListener { value, error ->
             if (value == null || error != null) {
@@ -82,7 +85,7 @@ class GroupFragment : Fragment() {
                 return@addSnapshotListener
             }
 
-            Log.d("DATA", value.toObjects(MainDataFile::class.java).toString())
+            Log.d("DATA", value.toObjects(ExpensesDataFile::class.java).toString())
             ExpensesLinkModel.clear()
             ExpensesLinkModel.addAll(value.toObjects(ExpensesDataFile::class.java))
             recyclerView = binding.recyclerView
@@ -91,6 +94,47 @@ class GroupFragment : Fragment() {
             recyclerView.adapter = ExpensesAdapter(ExpensesLinkModel)
 
             recyclerView.visibility = View.VISIBLE
+        }
+    }
+
+    fun getmyshare(){
+
+        val tsLong = System.currentTimeMillis()
+        val ts = tsLong / 1000
+
+
+        val currentuser = FirebaseAuth.getInstance().currentUser!!.uid.toString()
+
+        val firestore = FirebaseFirestore.getInstance()
+        val collectionReference =
+            firestore.collection("Groups").document(docid.toString())
+
+        collectionReference.addSnapshotListener { value, error ->
+            if (value == null || error != null) {
+                Toast.makeText(activity, "Error fetching data", Toast.LENGTH_SHORT).show()
+                return@addSnapshotListener
+            }
+            Log.d("hey", value.toString())
+
+            val Contribution: Any? = value.get("Contribution")
+            val Share: Any? = value.get("Share")
+
+
+            val mylist: MainDataFile = MainDataFile(Contribution = Contribution as HashMap<String, Long>?, Share = Share as HashMap<String, Long>?)
+
+            val email = PreferenceManager.getDefaultSharedPreferences(this.activity).getString("Email", "");
+
+            val sharemap= mylist.getShares()
+            val contributionmap= mylist.getContributions()
+
+
+//        Log.d("hello", sharemap.toString())
+            val valueOfElement = sharemap?.get(email).toString()
+            val valueOfElement2 = contributionmap?.get(email).toString()
+
+            binding.shareText.text = "₹$valueOfElement"
+            binding.contributionText.text =  "₹$valueOfElement2"
+
         }
     }
 
@@ -107,6 +151,8 @@ class GroupFragment : Fragment() {
             binding.GrpName.text = grpName
             binding.contributionText.text = shares
 
+            Log.d("hey2", value.toString())
+
             val email =
                 PreferenceManager.getDefaultSharedPreferences(activity).getString("Email", "")
             binding.shareText.text = shares
@@ -117,6 +163,21 @@ class GroupFragment : Fragment() {
             }
         }
     }
+
+    fun changeFragment(){
+        binding.addingexpense.setOnClickListener {
+            val fram = activity?.supportFragmentManager?.beginTransaction()
+            val frag: Fragment = AddgrpFragment()
+            val args = Bundle()
+            args.putString("docid", docid)
+            frag.setArguments(args)
+            fram?.replace(R.id.main_container, frag)
+            fram!!.addToBackStack("true")
+            fram?.commit()
+        }
+    }
+
+
 
     companion object {
         fun isConnectionAvailable(context: Context): Boolean {

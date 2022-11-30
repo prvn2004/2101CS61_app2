@@ -7,17 +7,17 @@ data class MainDataFile(
     val personMade: String = "",
     val groupReason: String = "",
     val groupTime: String = "",
-    val Contribution: HashMap<String, Long> = HashMap(),
-    val Share: HashMap<String, Long> = HashMap(),
+    val Contribution: HashMap<String, Long>? = HashMap(),
+    val Share: HashMap<String, Long>? = HashMap(),
 
     @DocumentId
     val documentId: String = ""
 ) {
-    fun getShares(): HashMap<String, Long>{
+    fun getShares(): HashMap<String, Long>?{
         return Share
     }
 
-    fun getContributions(): HashMap<String, Long>{
+    fun getContributions(): HashMap<String, Long>?{
         return Contribution
     }
 

@@ -4,7 +4,7 @@ import java.security.cert.CertPathValidatorException
 
 data class ExpensesDataFile(
     val personMade: String = "",
-    val totalBill: String = "",
+    val totalBill: Long = 0,
     val reason: String = "",
     val Share:HashMap<String, Long> = HashMap()
 ) {
@@ -15,7 +15,7 @@ data class ExpensesDataFile(
         return personMade
     }
 
-    fun getTotalbillfor(): String {
+    fun getTotalbillfor(): Long {
         return totalBill
     }
 
