@@ -6,8 +6,10 @@ data class ExpensesDataFile(
     val personMade: String = "",
     val totalBill: Long = 0,
     val reason: String = "",
-    val Share:HashMap<String, Long> = HashMap()
+    val Share:HashMap<String, Long> = HashMap(),
+    val Contribution: HashMap<String, Long> = HashMap()
 ) {
+
     fun getshares():HashMap<String, Long>{
         return Share
     }

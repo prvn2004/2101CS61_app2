@@ -13,17 +13,16 @@ import com.college.splitiitp.DataFiles.peoplefile
 import com.college.splitiitp.MainActivity
 import com.college.splitiitp.R
 import com.college.splitiitp.databinding.AddExpenseListItemBinding
-import com.college.splitiitp.fragments.AddgrpFragment
-import com.college.splitiitp.fragments.AddgrpFragment.Companion.adapterhandler
+import com.college.splitiitp.fragments.AddexpenseFragment
 import com.college.splitiitp.fragments.GroupFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 
-class GrpPeopleAdd(
+class ExpensePeopleShow(
     private var LinkList: ArrayList<peoplefile>, val docid: String?
 ) :
 
-    RecyclerView.Adapter<GrpPeopleAdd.MyViewHolder>() {
+    RecyclerView.Adapter<ExpensePeopleShow.MyViewHolder>() {
 // ------------------------------------------------------------------------------------------------------------------------------------------
 
     var docid1: String? = docid
@@ -36,7 +35,7 @@ class GrpPeopleAdd(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): GrpPeopleAdd.MyViewHolder {
+    ): ExpensePeopleShow.MyViewHolder {
 
         firestore = FirebaseFirestore.getInstance()
         firebaseStorage = FirebaseStorage.getInstance()
@@ -49,22 +48,25 @@ class GrpPeopleAdd(
                 false
             )
 
-        return GrpPeopleAdd.MyViewHolder(
+        return ExpensePeopleShow.MyViewHolder(
             binding
         )
     }
 
     override fun onBindViewHolder(
-        holder: GrpPeopleAdd.MyViewHolder,
+        holder: ExpensePeopleShow.MyViewHolder,
         position: Int
     ) {
         val Link = LinkList[position]
         holder.friction(Link, position, LinkList)
 
-        AddgrpFragment.adapterhandler = object : AddgrpFragment.AdapterHandler() {
+        AddexpenseFragment.adapterhandler = object : AddexpenseFragment.AdapterHandler() {
             override fun updateText(personMade: String, reason: String, totalbill: Number) {
-                val x = binding.amount.text.toString().toInt()
-                Link.giveshare(x)
+
+                for (item in LinkList){
+                    val x = binding.amount.text.toString().toInt()
+                    item.giveshare(x)
+                }
 
                 Toast.makeText(holder.itemView.context, "hello clicked", Toast.LENGTH_SHORT).show()
 

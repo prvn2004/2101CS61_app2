@@ -1,5 +1,6 @@
 package com.college.splitiitp.fragments
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -21,6 +22,7 @@ import com.college.splitiitp.Adapter.MainAdapter
 import com.college.splitiitp.DataFiles.MainDataFile
 import com.college.splitiitp.R
 import com.college.splitiitp.databinding.FragmentMainBinding
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -51,12 +53,23 @@ class MainFragment : Fragment() {
         if (isConnectionAvailable(requireActivity())) {
             getGroups()
             logoutbutton()
+            changeFragment()
         } else {
             setupAnim()
         }
     }
 
-    private fun logoutbutton(){
+    fun changeFragment() {
+        binding.addGroup.setOnClickListener {
+            val fram = activity?.supportFragmentManager?.beginTransaction()
+            val frag: Fragment = AddgroupFragment()
+            fram?.replace(R.id.main_container, frag)
+            fram!!.addToBackStack("true")
+            fram.commit()
+        }
+    }
+
+    private fun logoutbutton() {
         binding.logoutbutton.setOnClickListener {
             showDialoglogout()
         }
@@ -78,7 +91,7 @@ class MainFragment : Fragment() {
         alert.show()
     }
 
-    private fun signout(){
+    private fun signout() {
         auth.signOut()
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
@@ -91,12 +104,13 @@ class MainFragment : Fragment() {
         activity?.finish()
     }
 
-    private fun emptylist(){
+    private fun emptylist() {
         binding.animationView.setAnimation(R.raw.no_data)
         binding.animationView.repeatCount = LottieDrawable.INFINITE
         binding.animationView.playAnimation()
     }
 
+    @SuppressLint("SetTextI18n", "SuspiciousIndentation")
     private fun getGroups() {
 
         val tsLong = System.currentTimeMillis()
@@ -104,21 +118,33 @@ class MainFragment : Fragment() {
 
         val currentuser = FirebaseAuth.getInstance().currentUser!!.uid.toString()
 
+        val acct = GoogleSignIn.getLastSignedInAccount(requireActivity())
+        var personEmail = ""
+            if (acct != null) {
+                personEmail = acct.email.toString()
+        }
+
         firestore = FirebaseFirestore.getInstance()
         val collectionReference =
-            firestore.collection("Groups")
+            firestore.collection("Groups").whereArrayContains("peoples", personEmail)
 
         collectionReference.addSnapshotListener { value, error ->
             if (value == null || error != null) {
                 Toast.makeText(activity, "Error fetching data", Toast.LENGTH_SHORT).show()
                 return@addSnapshotListener
             }
-            if (value.isEmpty){
+            binding.openTabs.text =   value.size().toString() +" OPEN GROUPS"
+            if (value.isEmpty) {
                 emptylist()
             }
             Log.d("DATA", value.toObjects(MainDataFile::class.java).toString())
             GroupsLinkModel.clear()
             GroupsLinkModel.addAll(value.toObjects(MainDataFile::class.java))
+            var totalmoney : Long = 0
+            for (item in GroupsLinkModel){
+                totalmoney+= item.getShares()?.get(personEmail)!!
+            }
+            binding.totalSpend.text = "₹$totalmoney"
             recyclerView = binding.recyclerview
             recyclerView.setHasFixedSize(true)
             recyclerView.layoutManager = GridLayoutManager(activity, 2)

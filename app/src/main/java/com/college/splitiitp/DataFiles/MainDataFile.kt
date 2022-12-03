@@ -13,6 +13,10 @@ data class MainDataFile(
     @DocumentId
     val documentId: String = ""
 ) {
+
+//    fun getpoeplelist(): ArrayList<peoplefile>{
+//        return peoples
+//    }
     fun getShares(): HashMap<String, Long>?{
         return Share
     }

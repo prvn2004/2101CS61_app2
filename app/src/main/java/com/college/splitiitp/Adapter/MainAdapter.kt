@@ -25,6 +25,7 @@ class MainAdapter(
     private lateinit var binding: GroupsListItemBinding
     private lateinit var firestore: FirebaseFirestore
     private lateinit var firebaseStorage: FirebaseStorage
+    var totalshare: Long = 0
 
     //-------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -59,9 +60,14 @@ class MainAdapter(
         val docid = Link.getDocid().toString()
 
 
+
         val email = PreferenceManager.getDefaultSharedPreferences(holder.itemView.context).getString("Email", "");
         val TotalShare = Link.getShares()
         val myshare= TotalShare!!.get(email).toString()
+
+        for (item in LinkList){
+            totalshare+= item.getShares()?.get(email)!!
+        }
 
         binding.myShare.text = "₹$myshare"
 

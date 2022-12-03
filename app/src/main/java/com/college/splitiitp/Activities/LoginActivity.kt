@@ -1,13 +1,11 @@
 package com.college.splitiitp.Activities
 
-import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import com.airbnb.lottie.LottieDrawable
 import com.college.splitiitp.MainActivity
@@ -100,17 +98,13 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun UpdateUI(account: GoogleSignInAccount) {
-        val progressDialog = ProgressDialog(this)
-        progressDialog.setMessage("Logging In")
-        progressDialog.setCancelable(false)
-        progressDialog.show()
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         auth.signInWithCredential(credential).addOnCompleteListener { task ->
             if (task.isSuccessful) {
+                Toast.makeText(this, "login success", Toast.LENGTH_SHORT).show()
                 val acct = GoogleSignIn.getLastSignedInAccount(this)
-                if (acct != null) {
-                    val personName = acct.displayName.toString()
-                    val personEmail = acct.email.toString()
+                    val personName = acct?.displayName.toString()
+                    val personEmail = acct?.email.toString()
 
                     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
                     val editor = preferences.edit()
@@ -119,17 +113,14 @@ class LoginActivity : AppCompatActivity() {
 
                     val uid = FirebaseAuth.getInstance().currentUser?.uid.toString()
                     WriteNewUser(personName, personEmail, uid)
-                }
+
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
-                if (progressDialog.isShowing) progressDialog.dismiss()
             } else {
                 Toast.makeText(this, "failed", Toast.LENGTH_SHORT).show()
             }
         }
-        if (progressDialog.isShowing) progressDialog.dismiss()
-
     }
 
     private fun WriteNewUser(personName: String, personEmail: String, uid: String) {

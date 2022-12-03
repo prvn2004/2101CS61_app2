@@ -11,15 +11,15 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.college.splitiitp.Adapter.GrpPeopleAdd
+import com.college.splitiitp.Adapter.ExpensePeopleShow
 import com.college.splitiitp.DataFiles.peoplefile
-import com.college.splitiitp.databinding.FragmentAddgrpBinding
+import com.college.splitiitp.databinding.FragmentAddexpenseBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 
-class AddgrpFragment : Fragment() {
-    private lateinit var binding: FragmentAddgrpBinding
+class AddexpenseFragment : Fragment() {
+    private lateinit var binding: FragmentAddexpenseBinding
     var docid: String? = ""
     lateinit var recyclerView: RecyclerView
     private lateinit var auth: FirebaseAuth
@@ -28,7 +28,7 @@ class AddgrpFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAddgrpBinding.inflate(inflater, container, false)
+        binding = FragmentAddexpenseBinding.inflate(inflater, container, false)
         val view = binding.root
         docid = requireArguments().getString("docid")
 
@@ -38,7 +38,7 @@ class AddgrpFragment : Fragment() {
     }
 
     fun ImplementFun() {
-        if (AddgrpFragment.isConnectionAvailable(requireActivity())) {
+        if (AddexpenseFragment.isConnectionAvailable(requireActivity())) {
             getExpenses()
             updateexpense()
         } else {
@@ -55,7 +55,7 @@ class AddgrpFragment : Fragment() {
         val firestore = FirebaseFirestore.getInstance()
         val collectionReference =
             firestore.collection("Groups").document(docid.toString())
-a
+
         collectionReference.addSnapshotListener { value, error ->
             if (value == null || error != null) {
                 Toast.makeText(activity, "Error fetching data", Toast.LENGTH_SHORT).show()
@@ -72,7 +72,7 @@ a
             recyclerView = binding.recyclerviewmain
             recyclerView.setHasFixedSize(true)
             recyclerView.layoutManager = LinearLayoutManager(activity)
-            recyclerView.adapter = GrpPeopleAdd(PeopleLinkModel, docid)
+            recyclerView.adapter = ExpensePeopleShow(PeopleLinkModel, docid)
 
             recyclerView.visibility = View.VISIBLE
         }
